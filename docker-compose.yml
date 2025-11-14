@@ -1,0 +1,13 @@
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: meg
+      POSTGRES_PASSWORD: M123
+      POSTGRES_DB: demo
+    ports:
+      - "5431:5432"
