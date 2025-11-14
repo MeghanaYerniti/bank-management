@@ -1,3 +1,7 @@
-FROM openjdk:21-jdk
-ADD target/bank.jar bank.jar
-ENTRYPOINT["java", "-jar", "/bank.jar"]
+FROM eclipse-temurin:21-jdk
+
+COPY target/bank.jar /app/bank.jar
+
+WORKDIR /app
+
+ENTRYPOINT ["java", "-jar", "bank.jar"]
