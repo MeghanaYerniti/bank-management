@@ -1,15 +1,23 @@
-INSERT INTO customer_entity (name, pan, email, phone, created_at, updated_at) VALUES
-('John Doe', 'ABCDE1234F', 'john.doe@example.com', '+919876543210', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-('Jane Smith', 'FGHIJ5678K', 'jane.smith@example.com', '9876543210', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO customer_entity (customer_id, name, pan, email, phone, created_at, updated_at) VALUES
+(1, 'John Doe', 'ABCDE1234F', 'john.doe@example.com', '+919876543210', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(2, 'Jane Smith', 'FGHIJ5678K', 'jane.smith@example.com', '9876543210', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(4, 'Merry May', 'ABCDE6784F', 'merry.may@example.com', '+917856645393', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP) ON CONFLICT (customer_id) DO NOTHING;
 
+INSERT INTO bank_account (account_id, customer_id, account_holder_name, account_type, balance, interest_rate,
+                          account_status, last_transaction_timestamp, created_at, updated_at)
+VALUES
+(20000001, 1, 'John Doe', 'SAVINGS', 1000.50, 3.5, 'ACTIVE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(20000003, 2, 'Jane Smith', 'SAVINGS', 2500.75, 3.5, 'ACTIVE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(10000009, 2, 'Jane Smith', NULL, 5000, 0.0, 'ACTIVE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(10000010, 4, 'Merry May', NULL, 5032, 0.0, 'ACTIVE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+(20000002, 1, 'John Doe', 'CURRENT', 10000, 0.0, 'ACTIVE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP) ON CONFLICT (account_id) DO NOTHING;
 
-INSERT INTO bank_account (customer_id, account_holder_name, type, balance, interest_rate, account_status, last_transaction_timestamp, created_at, updated_at) VALUES
-(1, 'John Doe', 'SAVINGS', 1000.50, 3.5, 'ACTIVE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(1, 'John Doe', 'CURRENT', 5000.00, 0.0, 'ACTIVE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(2, 'Jane Smith', 'SAVINGS', 2500.75, 3.5, 'ACTIVE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(2, 'Jane Smith', 'CURRENT', 750.25, 0.0, 'CLOSED', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-
-INSERT INTO transactions (transaction_id, from_account_id, to_account_id, amount, initial_balance, remaining_balance, transaction_type, timestamp, status) VALUES
-('12c427e2-2774-4fdc-b411-952ee8114d3a', NULL, 10000000, 1000.00, 0.00, 1000.50, 'DEPOSIT', CURRENT_TIMESTAMP, 'SUCCESS'),
-('827e6967-bb93-46bd-9dc5-29d46cf82d1c', 10000000, NULL, 200.00, 1000.50, 800.50, 'WITHDRAW', CURRENT_TIMESTAMP, 'SUCCESS'),
-('daaa412e-87fe-4a71-945c-1e3f5874ca98', 10000000, 10000002, 300.00, 800.50, 500.50, 'TRANSFER', CURRENT_TIMESTAMP, 'SUCCESS');
+INSERT INTO transactions (transaction_id, from_account_id, to_account_id, amount,
+                          initial_balance, remaining_balance, transaction_type, timestamp, status)
+VALUES
+('12c427e2-2774-4fdc-b411-952ee8114d3a', NULL, 20000001, 1000, 0, 1000.5, 'DEPOSIT', CURRENT_TIMESTAMP, 'SUCCESS'),
+('827e6967-bb93-46bd-9dc5-29d46cf82d1c', 20000001, NULL, 200, 1000.5, 800.5, 'WITHDRAW', CURRENT_TIMESTAMP, 'SUCCESS'),
+('daaa412e-87fe-4a71-945c-1e3f5874ca98', 20000001, 20000002, 300, 800.5, 500.5, 'TRANSFER', CURRENT_TIMESTAMP, 'SUCCESS'),
+('a6963174-1eb4-4d32-a765-2ddd7f847223', NULL, 20000002, 5000, 5000, 10000, 'DEPOSIT', CURRENT_TIMESTAMP, 'SUCCESS'),
+('6a792766-e630-4c8c-9358-22e3568a59e2', NULL, 20000002, 5000, 10000, 15000, 'DEPOSIT', CURRENT_TIMESTAMP, 'SUCCESS'),
+('971ae605-4a79-4195-91cf-e5eef39fd339', 20000002, NULL, 5000, 15000, 10000, 'WITHDRAW', CURRENT_TIMESTAMP, 'SUCCESS') ON CONFLICT (transaction_id) DO NOTHING;
